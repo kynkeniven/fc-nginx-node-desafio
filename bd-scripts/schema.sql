@@ -1,0 +1,9 @@
+USE nodedb;
+
+DROP TABLE IF EXISTS nodedb.PEOPLE;
+
+CREATE TABLE nodedb.PEOPLE (
+    ID INT  NOT NULL AUTO_INCREMENT,
+    NAME varchar(255),
+    PRIMARY KEY (ID)
+);
