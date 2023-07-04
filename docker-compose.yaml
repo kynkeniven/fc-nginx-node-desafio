@@ -20,13 +20,14 @@ services:
     networks: 
       - node-network
     volumes: 
-      - ./node:/usr/src/app
+      - ./node:/app
+      #- ./node/node_modules:/app/node_modules
     tty: true
+    ports:
+       - "3000:3000"
     depends_on: 
        db:
         condition: service_healthy
-
-
 
   db:
     image: mysql:5.7
@@ -44,8 +45,8 @@ services:
       - node-network
     healthcheck:
             test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-            interval: 5s
-            timeout: 10s
+            interval: 20s
+            timeout: 30s
             retries: 5
 
 networks: 
