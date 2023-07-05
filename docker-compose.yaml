@@ -19,8 +19,8 @@ services:
     container_name: app
     networks: 
       - node-network
-    volumes: 
-      - ./node:/app
+    #volumes: 
+     # - ./node:/app/
       #- ./node/node_modules:/app/node_modules
     tty: true
     ports:
