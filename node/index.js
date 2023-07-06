@@ -14,7 +14,7 @@ async function createApp() {
         const selectPeople = `SELECT name FROM people`
         const allPeople = await queryPromise.query(selectPeople)
 
-        const html = `<h1>Full Cycle1</h1>\n
+        const html = `<h1>Full Cycle</h1>\n
         <ul>
         ${allPeople.map(people => `<li>${people.name}</li>`).join('')}
         </ul>`
