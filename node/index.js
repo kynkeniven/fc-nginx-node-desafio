@@ -1,41 +1,28 @@
 const express = require('express')
-const app = express()
-const port = 3000
+const { queryPromise } = require('./queryPromise')
 
-const config = {
-    host: 'db',
-    user: 'root',
-    password: 'root',
-    database:'nodedb'
-};
-const mysql = require('mysql')
-const connection = mysql.createConnection(config)
 
-const sql = `INSERT INTO people(name) values('John Doe')`
-connection.query(sql)
+async function createApp() {
+    const app = express()
+    const sqlTable = `CREATE TABLE IF NOT EXISTS people(id int NOT NULL AUTO_INCREMENT, name varchar(255) NOT NULL, PRIMARY KEY(id))`;
+    await queryPromise.query(sqlTable)
 
-connection.end()
+    const sql = `INSERT INTO people(name) values('John Doe')`
+    await queryPromise.query(sql)
 
-app.get('/', (req,res) => {
-    const conn = mysql.createConnection(config)
-    const sql2 = `SELECT name FROM people`
+    app.get('/', async (req,res) => {
+        const selectPeople = `SELECT name FROM people`
+        const allPeople = await queryPromise.query(selectPeople)
+
+        const html = `<h1>Full Cycle</h1>\n
+        <ul>
+        ${allPeople.map(people => `<li>${people.name}</li>`).join('')}
+        </ul>`
     
-    conn.query(sql2, function(err, results){
-        if (err){ 
-            conn.end();
-          throw err;
-        }
-        var myData = []; 
-        Object.keys(results).forEach(function(key) {
-            var row = results[key];
-            myData.push(row.name);
-          });
-          res.send('<h1>Full Cycle</h1> <br>' + JSON.stringify(myData))
-
+        res.send(html)
+        
     })
-    conn.end()
-})
+    return app
+}
 
-app.listen(port, ()=> {
-    console.log('Rodando na porta ' + port)
-})
+module.exports = createApp
